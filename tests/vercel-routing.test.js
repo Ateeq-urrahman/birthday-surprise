@@ -5,9 +5,11 @@ const { test } = require('node:test');
 
 const projectRoot = path.join(__dirname, '..');
 const vercelConfig = JSON.parse(fs.readFileSync(path.join(projectRoot, 'vercel.json'), 'utf8'));
+const packageConfig = JSON.parse(fs.readFileSync(path.join(projectRoot, 'package.json'), 'utf8'));
 
 test('Vercel entry routes point to the app and admin pages', () => {
   assert.equal(vercelConfig.framework, null);
+  assert.equal(packageConfig.main, 'api/index.js');
   const rewrites = new Map(vercelConfig.rewrites.map(({ source, destination }) => [source, destination]));
   assert.equal(rewrites.get('/'), '/birthday/index.html');
   assert.equal(rewrites.get('/admin'), '/admin/index.html');
