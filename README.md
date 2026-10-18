@@ -39,7 +39,7 @@ For the local SQLite app, the first registered account becomes the administrator
 
 ## Deploy on Vercel with Supabase
 
-The Vercel build uses the serverless endpoint in `api/index.js`; it does not run the local SQLite server. Create a Supabase project, then paste and run [`supabase/schema.sql`](./supabase/schema.sql) in its SQL Editor. The schema enables row-level security and only grants application access to the server-side service role. Keep that service-role key private: never put it in browser code, source control, or a `NEXT_PUBLIC_*` variable.
+The Vercel build uses the root `index.js` Node entrypoint to serve the birthday and admin pages and forward API requests to `api/index.js`; it does not run the local SQLite server in `server.js`. Create a Supabase project, then paste and run [`supabase/schema.sql`](./supabase/schema.sql) in its SQL Editor. The schema enables row-level security and only grants application access to the server-side service role. Keep that service-role key private: never put it in browser code, source control, or a `NEXT_PUBLIC_*` variable.
 
 For local Vercel-function testing, copy `.env.example` to `.env.local`, fill in the Supabase service-role key and the other private values, then run `npx vercel dev` from the project root. The sample file already contains this project's Supabase URL. Do not commit `.env.local`; it is excluded by `.gitignore`. The regular `npm start` command intentionally continues to use the local SQLite server.
 

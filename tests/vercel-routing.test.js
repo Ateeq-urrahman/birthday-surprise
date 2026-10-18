@@ -9,7 +9,9 @@ const packageConfig = JSON.parse(fs.readFileSync(path.join(projectRoot, 'package
 
 test('Vercel entry routes point to the app and admin pages', () => {
   assert.equal(vercelConfig.framework, null);
-  assert.equal(packageConfig.main, 'api/index.js');
+  assert.equal(vercelConfig.functions['index.js'].includeFiles, '{birthday,admin}/**/*');
+  assert.equal(packageConfig.main, 'index.js');
+  assert.ok(fs.existsSync(path.join(projectRoot, packageConfig.main)));
   const rewrites = new Map(vercelConfig.rewrites.map(({ source, destination }) => [source, destination]));
   assert.equal(rewrites.get('/'), '/birthday/index.html');
   assert.equal(rewrites.get('/admin'), '/admin/index.html');
