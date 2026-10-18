@@ -29,7 +29,19 @@ async function apiRequest(url, options = {}) {
       ...options.headers
     }
   });
-  const result = await response.json();
+  const responseBody = await response.text();
+  if (!response.headers.get('content-type')?.includes('application/json')) {
+    throw new Error('The account API returned a web page instead of JSON. Live Server only serves static files. Run `npm start` from the project folder and open http://localhost:3000/admin/.');
+  }
+  if (!responseBody) {
+    throw new Error(`The account server returned an empty response (HTTP ${response.status}). Check that the app server is running and try again.`);
+  }
+  let result;
+  try {
+    result = JSON.parse(responseBody);
+  } catch {
+    throw new Error(`The account server returned an invalid response (HTTP ${response.status}). Try again, and check the server logs if this continues.`);
+  }
   if (!response.ok) {
     const error = new Error(result.error || 'The request could not be completed.');
     error.status = response.status;
