@@ -1,0 +1,19 @@
+{
+  "name": "Birthday Wishes",
+  "short_name": "Birthday",
+  "description": "Play cheerful birthday games and unlock a personalized surprise.",
+  "start_url": "/birthday/",
+  "scope": "/birthday/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fff8f3",
+  "theme_color": "#f35c8d",
+  "icons": [
+    {
+      "src": "/birthday/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "birthday-wishes",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Birthday surprise game with local username accounts and SQLite profile storage",
+  "scripts": {
+    "start": "node server.js",
+    "start:network": "node server.js --network",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.8.1"
+  }
+}

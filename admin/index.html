@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#fff8f3" />
+    <title>Birthday Wishes · Admin</title>
+    <link rel="stylesheet" href="/admin/style.css" />
+    <script src="/admin/script.js" defer></script>
+  </head>
+  <body>
+    <main class="admin-wrap">
+      <header class="topbar">
+        <a class="brand" href="/birthday/">🎉 Birthday Wishes <span>/ Admin</span></a>
+        <nav aria-label="Admin actions">
+          <a class="button secondary" href="/birthday/">Birthday game</a>
+          <button class="button secondary" id="logoutBtn" type="button" hidden>Log out</button>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <p class="eyebrow">Administrator dashboard</p>
+        <h1>Accounts &amp; profiles</h1>
+        <p>Search registered accounts and manage regular user profiles. Birthday information is personal—only access it when needed.</p>
+      </section>
+
+      <section class="notice" id="accessNotice" role="status" aria-live="polite">
+        Checking administrator access…
+      </section>
+
+      <section class="dashboard" id="dashboard" hidden>
+        <div class="summary-row">
+          <div>
+            <h2>User directory</h2>
+            <p id="resultSummary">Loading accounts…</p>
+          </div>
+          <form class="search-form" id="searchForm" role="search">
+            <label class="visually-hidden" for="searchInput">Search users</label>
+            <input id="searchInput" type="search" maxlength="80" placeholder="Search username or name" />
+            <button class="button primary" type="submit">Search</button>
+          </form>
+        </div>
+
+        <p class="notice error-notice" id="pageError" role="alert" hidden></p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Account</th>
+                <th scope="col">Birthday</th>
+                <th scope="col">Pronouns</th>
+                <th scope="col">Favorite color</th>
+                <th scope="col">Birthday wish</th>
+                <th scope="col">Joined</th>
+                <th scope="col"><span class="visually-hidden">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody id="userRows">
+              <tr><td class="empty-state" colspan="7">Loading accounts…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">Up to 200 matching accounts are displayed. Administrator accounts cannot be deleted here.</p>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Birthday Game Reveal</title>
+    <meta name="theme-color" content="#f35c8d" />
+    <meta name="description" content="Play cheerful birthday mini-games and unlock a personalized surprise." />
+    <link rel="manifest" href="/birthday/manifest.webmanifest" />
+    <link rel="icon" href="/birthday/icon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/birthday/icon.svg" />
+    <link rel="stylesheet" href="/birthday/style.css" />
+  </head>
+  <body>
+    <div class="page-wrap">
+      <header class="topbar">
+        <div class="brand">🎉 Birthday unlock</div>
+        <div class="topbar-actions">
+          <span class="account-badge" id="accountBadge" hidden></span>
+          <a id="adminLink" class="ghost-btn admin-link" href="/admin/" hidden>Admin page</a>
+          <button id="editProfileBtn" class="ghost-btn" type="button" hidden>Edit profile</button>
+          <button id="chooseGameBtn" class="ghost-btn" type="button" hidden>Choose a game</button>
+          <button id="restartBtn" class="ghost-btn" type="button" hidden>Restart</button>
+          <button id="soundToggle" class="ghost-btn" type="button" aria-pressed="true" hidden>Sound: on</button>
+          <button id="musicToggle" class="ghost-btn" type="button" aria-pressed="false" hidden>Play music</button>
+          <button id="installAppBtn" class="ghost-btn" type="button" hidden>Install app</button>
+          <button id="logoutBtn" class="ghost-btn" type="button" hidden>Log out</button>
+        </div>
+      </header>
+
+      <main class="profile-screen panel" id="profileScreen">
+        <p class="eyebrow">Your birthday, your surprise</p>
+        <h1 id="formHeading">Create your account</h1>
+        <p class="subtitle">
+          Create an account to save your birthday profile, or log in to continue.
+        </p>
+
+        <form id="profileForm" class="profile-form">
+          <p class="form-error" id="profileAuthError" role="alert" hidden></p>
+          <div class="form-grid">
+            <label class="form-field full-field account-field">
+              <span>Username</span>
+              <input id="profileUsername" name="username" type="text" autocomplete="username" minlength="3" maxlength="32" pattern="[A-Za-z0-9_.\-]+" required />
+            </label>
+            <label class="form-field full-field account-field">
+              <span>Password <span class="optional">(at least 6 characters)</span></span>
+              <span class="password-control">
+                <input id="profilePassword" name="password" type="password" autocomplete="new-password" minlength="6" maxlength="128" required />
+                <button class="password-toggle" id="toggleSignupPassword" type="button" aria-label="Show sign-up password" aria-pressed="false">Show</button>
+              </span>
+            </label>
+            <label class="form-field">
+              <span>Your name</span>
+              <input id="profileName" name="name" type="text" autocomplete="name" maxlength="80" required />
+            </label>
+            <label class="form-field">
+              <span>Date of birth</span>
+              <input id="profileBirthday" name="birthday" type="date" required />
+            </label>
+            <label class="form-field">
+              <span>Pronouns <span class="optional">(optional)</span></span>
+              <select id="profilePronouns" name="pronouns">
+                <option value="">Prefer not to say</option>
+                <option value="she/her">she/her</option>
+                <option value="he/him">he/him</option>
+                <option value="they/them">they/them</option>
+                <option value="use my name">Use my name</option>
+              </select>
+            </label>
+            <label class="form-field color-field">
+              <span>Favorite color</span>
+              <select id="profileColor" name="favoriteColor">
+                <option value="Pink">Pink</option>
+                <option value="Red">Red</option>
+                <option value="Orange">Orange</option>
+                <option value="Yellow">Yellow</option>
+                <option value="Green">Green</option>
+                <option value="Teal">Teal</option>
+                <option value="Blue">Blue</option>
+                <option value="Purple">Purple</option>
+                <option value="Black">Black</option>
+                <option value="White">White</option>
+              </select>
+              <span class="color-preview-row">
+                <span class="color-swatch" id="colorSwatch" aria-hidden="true"></span>
+                <span id="colorNamePreview">Pink</span>
+                <span class="visually-hidden" id="colorPreviewDescription" aria-live="polite">Pink color preview</span>
+              </span>
+            </label>
+            <label class="form-field full-field">
+              <span>A birthday wish for yourself <span class="optional">(optional)</span></span>
+              <textarea id="profileWish" name="wish" rows="3" maxlength="250" placeholder="Something you hope to do, feel, or celebrate this year…"></textarea>
+            </label>
+            <label class="form-field full-field">
+              <span>Birthday messages from friends <span class="optional">(optional, one per line)</span></span>
+              <textarea id="profileMessages" name="messages" rows="4" maxlength="1000" placeholder="Add kind messages from people you love. Keep them private to your account."></textarea>
+            </label>
+          </div>
+          <p class="form-error" id="profileError" role="alert" hidden></p>
+          <button class="button primary" id="profileSubmitBtn" type="submit">Create account &amp; play</button>
+          <button class="auth-switch" id="showLoginBtn" type="button">Already have an account? Log in</button>
+          <button class="button secondary" id="cancelEditBtn" type="button" hidden>Cancel editing</button>
+        </form>
+
+        <form id="loginForm" class="profile-form" hidden>
+          <p class="form-note">Log in to load your saved birthday profile and continue playing.</p>
+          <label class="form-field">
+            <span>Username</span>
+            <input id="loginUsername" name="username" type="text" autocomplete="username" maxlength="32" required />
+          </label>
+          <label class="form-field">
+            <span>Password</span>
+            <span class="password-control">
+              <input id="loginPassword" name="password" type="password" autocomplete="current-password" maxlength="128" required />
+              <button class="password-toggle" id="toggleLoginPassword" type="button" aria-label="Show login password" aria-pressed="false">Show</button>
+            </span>
+          </label>
+          <p class="form-error" id="loginError" role="alert" hidden></p>
+          <button class="button primary" type="submit">Log in</button>
+          <button class="auth-switch" id="showSignupBtn" type="button">New here? Create an account</button>
+        </form>
+      </main>
+
+      <section class="game-picker panel" id="gamePicker" hidden aria-labelledby="gamePickerTitle">
+        <p class="eyebrow">Choose your birthday game</p>
+        <h1 id="gamePickerTitle">Pick a game and a challenge</h1>
+        <p class="subtitle">Choose from seven party games, then pick Easy, Normal, or Hard. Every game unlocks your birthday surprise.</p>
+        <div class="personalization-panel">
+          <h2>Your party settings</h2>
+          <div class="settings-grid">
+            <label class="difficulty-field">Color theme
+              <select id="themeSelect">
+                <option value="classic">Birthday pink</option>
+                <option value="ocean">Ocean blue</option>
+                <option value="garden">Garden green</option>
+                <option value="starlight">Starlight purple</option>
+              </select>
+            </label>
+            <label class="setting-toggle"><input id="effectsToggle" type="checkbox" checked /> Sound effects</label>
+            <label class="setting-toggle"><input id="motionToggle" type="checkbox" /> Reduce motion</label>
+            <label class="setting-toggle"><input id="contrastToggle" type="checkbox" /> High contrast</label>
+          </div>
+          <p class="subtitle">Theme, sound, and motion preferences are saved on this device.</p>
+        </div>
+        <section class="progress-panel" aria-labelledby="progressTitle">
+          <h2 id="progressTitle">Your game progress</h2>
+          <p id="progressSummary" aria-live="polite">Loading saved progress…</p>
+          <div class="achievement-list" id="achievementList"></div>
+        </section>
+        <section class="daily-challenge-card" aria-labelledby="dailyChallengeTitle">
+          <div>
+            <p class="eyebrow">A new challenge every day</p>
+            <h2 id="dailyChallengeTitle">Today's birthday challenge</h2>
+            <p id="dailyChallengeDescription"></p>
+            <p id="dailyChallengeStatus" aria-live="polite"></p>
+          </div>
+          <button class="button primary" id="dailyChallengeBtn" type="button">Play today's challenge</button>
+        </section>
+        <section class="photo-memories-panel" aria-labelledby="memoriesTitle">
+          <h2 id="memoriesTitle">Photo memories <span class="optional">Saved only in this browser</span></h2>
+          <p>Add up to five photos you have permission to use. Images stay on this device and are not uploaded.</p>
+          <label class="button secondary photo-picker" for="memoryPhotoInput">Add photos</label>
+          <input id="memoryPhotoInput" class="visually-hidden" type="file" accept="image/*" multiple />
+          <p id="photoMemoryStatus" role="status"></p>
+          <div class="photo-memory-grid" id="photoMemoryGrid"></div>
+        </section>
+        <section class="privacy-panel" aria-labelledby="privacyTitle">
+          <h2 id="privacyTitle">Your data controls</h2>
+          <p>Profile and game progress are stored by this app's server. Photos and offline profile copies stay in this browser.</p>
+          <div class="privacy-actions">
+            <button class="button secondary" id="clearLocalDataBtn" type="button">Clear photos and offline copy</button>
+            <button class="button danger" id="deleteAccountBtn" type="button">Delete my account and data</button>
+          </div>
+          <p id="privacyStatus" role="status"></p>
+        </section>
+        <section class="install-panel" id="installHelp" hidden>
+          <h2>Install for quick access</h2>
+          <p id="installHelpText">Use your browser's menu and choose “Install app” or “Add to Home Screen”. Offline sign-in needs an existing device profile; account changes need a connection.</p>
+        </section>
+        <div class="game-options">
+          <article class="game-option-card" data-game-card="stars">
+            <div class="game-option-icon" aria-hidden="true">⭐</div><h2>Collect the stars</h2>
+            <p>Move around the board and gather every glowing star in three levels.</p>
+            <label class="difficulty-field">Difficulty<select class="difficulty-select" data-difficulty-for="stars"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></label>
+            <button class="button primary game-start-btn" type="button" data-game="stars">Play star collector</button>
+          </article>
+          <article class="game-option-card" data-game-card="balloons">
+            <div class="game-option-icon" aria-hidden="true">🎈</div><h2>Pop the balloons</h2>
+            <p>Tap every balloon before the party surprise pops out.</p>
+            <label class="difficulty-field">Difficulty<select class="difficulty-select" data-difficulty-for="balloons"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></label>
+            <button class="button primary game-start-btn" type="button" data-game="balloons">Play balloon pop</button>
+          </article>
+          <article class="game-option-card" data-game-card="quiz">
+            <div class="game-option-icon" aria-hidden="true">🎂</div><h2>Birthday quiz</h2>
+            <p>Answer cheerful birthday questions. Wrong answers can be tried again.</p>
+            <label class="difficulty-field">Difficulty<select class="difficulty-select" data-difficulty-for="quiz"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></label>
+            <button class="button primary game-start-btn" type="button" data-game="quiz">Play birthday quiz</button>
+          </article>
+          <article class="game-option-card" data-game-card="memory">
+            <div class="game-option-icon" aria-hidden="true">🧠</div><h2>Memory match</h2>
+            <p>Flip cards and find all the matching birthday pairs.</p>
+            <label class="difficulty-field">Difficulty<select class="difficulty-select" data-difficulty-for="memory"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></label>
+            <button class="button primary game-start-btn" type="button" data-game="memory">Play memory match</button>
+          </article>
+          <article class="game-option-card" data-game-card="scramble">
+            <div class="game-option-icon" aria-hidden="true">🔤</div><h2>Word scramble</h2>
+            <p>Unscramble cheerful party words to finish the challenge.</p>
+            <label class="difficulty-field">Difficulty<select class="difficulty-select" data-difficulty-for="scramble"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></label>
+            <button class="button primary game-start-btn" type="button" data-game="scramble">Play word scramble</button>
+          </article>
+          <article class="game-option-card" data-game-card="party">
+            <div class="game-option-icon" aria-hidden="true">🎉</div><h2>Party picker</h2>
+            <p>Find the party item shown before moving on to the next round.</p>
+            <label class="difficulty-field">Difficulty<select class="difficulty-select" data-difficulty-for="party"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></label>
+            <button class="button primary game-start-btn" type="button" data-game="party">Play party picker</button>
+          </article>
+          <article class="game-option-card" data-game-card="sequence">
+            <div class="game-option-icon" aria-hidden="true">🎵</div><h2>Repeat the rhythm</h2>
+            <p>Watch the birthday icons light up, then repeat the sequence.</p>
+            <label class="difficulty-field">Difficulty<select class="difficulty-select" data-difficulty-for="sequence"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></label>
+            <button class="button primary game-start-btn" type="button" data-game="sequence">Play repeat the rhythm</button>
+          </article>
+        </div>
+      </section>
+
+      <dialog class="instructions-dialog" id="instructionsDialog" aria-labelledby="instructionsTitle">
+        <form method="dialog">
+          <p class="eyebrow">Before you play</p>
+          <h2 id="instructionsTitle"></h2>
+          <p id="instructionsText"></p>
+          <div class="dialog-actions">
+            <button class="button secondary" value="cancel">Choose another</button>
+            <button class="button primary" id="beginGameBtn" type="button">Start game</button>
+          </div>
+        </form>
+      </dialog>
+
+      <section class="game-shell" id="gameShell" hidden>
+        <section class="panel info-panel">
+          <p class="eyebrow">Mini-game unlock</p>
+          <h1>Catch the birthday stars</h1>
+          <p class="subtitle">
+            Collect every glowing star in each round. Finish all levels and reveal the surprise message.
+          </p>
+
+          <div class="stats">
+            <div class="stat-box">
+              <span class="label">Level</span>
+              <strong id="levelValue">1</strong>
+            </div>
+            <div class="stat-box">
+              <span class="label">Stars</span>
+              <strong id="starsValue">0/0</strong>
+            </div>
+            <div class="stat-box">
+              <span class="label">Time</span>
+              <strong id="timeValue">60</strong>
+            </div>
+          </div>
+
+          <div class="message-box" id="statusMessage">
+            Collect all stars to unlock the surprise.
+          </div>
+
+          <section class="quote-card" aria-labelledby="quoteTitle">
+            <p class="quote-label" id="quoteTitle">A little birthday note</p>
+            <blockquote id="birthdayQuote" aria-live="polite"></blockquote>
+            <button class="quote-btn" id="newQuoteBtn" type="button">Another little wish ✨</button>
+          </section>
+        </section>
+
+        <section class="board-panel">
+          <canvas id="gameCanvas" width="720" height="480" aria-label="Birthday mini game"></canvas>
+
+          <div class="dpad" aria-label="Touch controls">
+            <button class="dir-btn" data-dir="up" aria-label="Move up">▲</button>
+            <div class="mid-row">
+              <button class="dir-btn" data-dir="left" aria-label="Move left">◀</button>
+              <button class="dir-btn" data-dir="down" aria-label="Move down">▼</button>
+              <button class="dir-btn" data-dir="right" aria-label="Move right">▶</button>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="simple-game panel" id="balloonGame" hidden aria-labelledby="balloonTitle">
+        <p class="eyebrow">Birthday game · Balloon pop</p>
+        <h1 id="balloonTitle">Pop the party balloons</h1>
+        <p class="subtitle">Tap or click each balloon. There is no timer—just pop them all to reveal your surprise.</p>
+        <p class="game-progress" id="balloonProgress" aria-live="polite">0 of 8 balloons popped</p>
+        <div class="balloon-grid" id="balloonGrid" aria-label="Balloons to pop"></div>
+        <button class="button secondary back-to-games" type="button">Choose a different game</button>
+      </section>
+
+      <section class="simple-game panel" id="quizGame" hidden aria-labelledby="quizTitle">
+        <p class="eyebrow">Birthday game · Quick quiz</p>
+        <h1 id="quizTitle">A tiny birthday quiz</h1>
+        <p class="subtitle">Pick an answer. If it is not quite right, you can try again—there is no timer.</p>
+        <p class="game-progress" id="quizProgress" aria-live="polite"></p>
+        <h2 class="question-text" id="quizQuestion"></h2>
+        <div class="answer-list" id="quizAnswers"></div>
+        <p class="quiz-feedback" id="quizFeedback" aria-live="polite"></p>
+        <button class="button secondary back-to-games" type="button">Choose a different game</button>
+      </section>
+
+      <section class="simple-game panel" id="extraGame" hidden aria-labelledby="extraGameTitle">
+        <p class="eyebrow" id="extraGameEyebrow">Birthday game</p>
+        <h1 id="extraGameTitle"></h1>
+        <p class="subtitle" id="extraGameDescription"></p>
+        <p class="game-progress" id="extraGameProgress" aria-live="polite"></p>
+        <p class="game-progress" id="extraGameFeedback" aria-live="polite"></p>
+        <div class="extra-game-content" id="memoryContent" hidden>
+          <div class="memory-grid" id="memoryGrid"></div>
+        </div>
+        <div class="extra-game-content" id="scrambleContent" hidden>
+          <p class="scramble-hint" id="scrambleHint"></p>
+          <p class="scrambled-word" id="scrambledWord"></p>
+          <form class="scramble-form" id="scrambleForm">
+            <label class="visually-hidden" for="scrambleAnswer">Unscrambled word</label>
+            <input id="scrambleAnswer" type="text" autocomplete="off" autocapitalize="none" maxlength="20" required />
+            <button class="button primary" type="submit">Check word</button>
+          </form>
+        </div>
+        <div class="extra-game-content" id="partyContent" hidden>
+          <p class="party-target" id="partyTarget"></p>
+          <div class="party-grid" id="partyGrid"></div>
+        </div>
+        <div class="extra-game-content" id="sequenceContent" hidden>
+          <div class="sequence-indicators" id="sequenceIndicators"></div>
+          <div class="sequence-buttons" id="sequenceButtons"></div>
+          <button class="button primary" id="sequenceStartBtn" type="button">Start round</button>
+        </div>
+        <button class="button secondary back-to-games" type="button">Choose a different game</button>
+      </section>
+
+      <aside class="reveal-card hidden" id="revealCard" aria-live="polite">
+        <div class="reveal-icon">🎁</div>
+        <h2 id="revealHeading">Surprise unlocked!</h2>
+        <p id="revealMessage"></p>
+        <p class="age-display" id="personAge"></p>
+        <p class="personal-wish" id="personalWish" hidden></p>
+        <section class="countdown-card" id="birthdayCountdown" aria-label="Birthday countdown" hidden>
+          <p class="countdown-label">Until your next birthday</p>
+          <p class="countdown-value" id="countdownValue" role="timer" aria-live="off"></p>
+        </section>
+        <blockquote class="reveal-quote" id="revealQuote"></blockquote>
+        <button class="quote-btn" id="revealQuoteBtn" type="button">Another little wish ✨</button>
+        <section class="friend-messages" id="friendMessagesSection" hidden aria-labelledby="friendMessagesTitle">
+          <h3 id="friendMessagesTitle">Birthday messages from your people</h3>
+          <div id="friendMessageList"></div>
+        </section>
+        <div class="share-actions">
+          <button class="button primary" id="shareCardBtn" type="button">Download or share birthday card</button>
+          <span id="shareStatus" role="status" aria-live="polite"></span>
+        </div>
+        <p class="signature" id="revealSignature">With love and a million tiny wishes 💖</p>
+      </aside>
+    </div>
+
+    <script src="/birthday/script.js"></script>
+  </body>
+</html>
