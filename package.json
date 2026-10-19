@@ -2,7 +2,6 @@
   "name": "birthday-wishes",
   "version": "1.0.0",
   "private": true,
-  "main": "index.js",
   "description": "Birthday surprise game with local username accounts and SQLite profile storage",
   "scripts": {
     "start": "node server.js",

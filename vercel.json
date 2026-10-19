@@ -1,10 +1,5 @@
 {
   "framework": null,
-  "functions": {
-    "api/index.js": {
-      "includeFiles": "{birthday,admin}/**/*"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/:path*",
